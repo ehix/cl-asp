@@ -1,0 +1,10 @@
+files removed:
+enron_100k_d2v_model
+enron_100k_d2v_model.docvecs.vectors_docs.npy
+enron_100k_d2v_model.trainables.syn1neg.npy
+enron_100k_d2v_model.wv.vectors.npy
+enron_100k_vectors.kv
+enron_100k_vectors.kv.vectors.npy
+
+see:
+./notebooks/ppam_script.ipynb

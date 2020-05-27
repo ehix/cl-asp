@@ -1,0 +1,7 @@
+files removed:
+email_df_100k.csv
+sentence_df_100k.csv
+word_df_100k.csv 
+
+see:
+./notebooks/ppam_script.ipynb

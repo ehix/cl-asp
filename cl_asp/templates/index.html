@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    .links line {
+        stroke: #999;
+        stroke-opacity: 0.6;
+    }
+
+    .nodes circle {
+        stroke: #fff;
+        stroke-width: 2px;
+    }
+</style>
+<html>
+
+<head>
+    <title>Comp. Proj.</title>
+
+    <link rel="stylesheet" href="./static/lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/lib/css/keen-dashboards.css">
+    <link rel="stylesheet" href="./static/lib/css/dc.css">
+    <link rel="stylesheet" href="./static/css/custom.css">
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3-polygon.v1.min.js"></script>
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha256-IdYuEFP3WJ/mNlzM18Y20Xgav3h5pgXYzl8fW4GnuPo=" crossorigin="anonymous"></script>
+
+    <script src="./static/js/d3-lasso.min.js"></script>
+    <script src='./static/js/scatter-graph-view.js' type='text/javascript'></script>
+    <script src='./static/js/document-view.js' type='text/javascript'></script>
+</head>
+
+<style>
+    .links line {
+        stroke: #999;
+        stroke-opacity: 0.6;
+    }
+
+    .nodes circle {
+        stroke: #fff;
+        stroke-width: 1.5px;
+    }
+
+    .bar {
+        fill: steelblue;
+    }
+
+    .bar:hover {
+        fill: brown;
+    }
+
+    .axis--x path {
+        display: none;
+    }
+
+    text {
+        font: 10px Verdana, Helvetica, Arial, sans-serif;
+    }
+
+    tspan {
+        fill: black;
+        font-weight: bold
+    }
+
+    .inputBox {
+        height: 26px;
+        width: 80px;
+        font-size: 10pt;
+    }
+
+    .dot {
+        fill: #ffab00;
+        stroke: #fff;
+        stroke-width: 2px;
+    }
+
+    .button {
+        height: 30px;
+        background-color: #a3a3a3;
+        display: inline-block;
+        padding: none;
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        line-height: 1;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+        position: relative;
+        cursor: pointer;
+    }
+
+    .large_font {
+        display: inline-block;
+        font-weight: bold;
+        font: 32px Verdana, Helvetica, Arial, sans-serif;
+    }
+
+    .highlight {
+        background-color: yellow;
+    }
+
+    .wrapper {
+        width: 500px;
+        overflow-y: scroll;
+        position: relative;
+        height: 100px;
+    }
+
+    .wrapper:hover {
+        background-color: #f2f2f2;
+    }
+
+    .sentence:hover {
+        background-color: #ffffff;
+    }
+
+    .task-wrapper:hover .options {
+        display: block;
+    }
+
+    .options {
+        display: none;
+        /* padding-top: 8px; */
+        padding-bottom: 8px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .hideable {
+        width: 50;
+        height: 50;
+        /* border: 1px solid black; */
+    }
+
+    .loader {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        height: 60px;
+        width: 60px;
+        margin: 0px auto;
+        -webkit-animation: rotation .6s infinite linear;
+        -moz-animation: rotation .6s infinite linear;
+        -o-animation: rotation .6s infinite linear;
+        animation: rotation .6s infinite linear;
+        border-left: 6px solid rgba(0, 174, 239, .15);
+        border-right: 6px solid rgba(0, 174, 239, .15);
+        border-bottom: 6px solid rgba(0, 174, 239, .15);
+        border-top: 6px solid rgba(0, 174, 239, .8);
+        border-radius: 100%;
+    }
+
+    @-webkit-keyframes rotation {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(359deg);
+        }
+    }
+
+    @-moz-keyframes rotation {
+        from {
+            -moz-transform: rotate(0deg);
+        }
+
+        to {
+            -moz-transform: rotate(359deg);
+        }
+    }
+
+    @-o-keyframes rotation {
+        from {
+            -o-transform: rotate(0deg);
+        }
+
+        to {
+            -o-transform: rotate(359deg);
+        }
+    }
+
+    @keyframes rotation {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(359deg);
+        }
+    }
+
+    /* circle {
+        fill-opacity: 0.5;
+    } */
+
+    /* .lasso path {
+        stroke: rgb(80, 80, 80);
+        stroke-width: 2px;
+    }
+
+    .lasso .drawn {
+        fill-opacity: .05;
+    }
+
+    .lasso .loop_close {
+        fill: none;
+        stroke-dasharray: 4, 4;
+    }
+
+    .lasso .origin {
+        fill: #3399FF;
+        fill-opacity: .5;
+    }
+
+    .not_possible {
+        fill: rgb(200, 200, 200);
+    }
+
+    .possible {
+        fill: #EC888C;
+    } */
+
+    .selected {
+        fill: yellow;
+    }
+</style>
+
+<script>
+    $(document).ajaxStart(function() {
+        $('.loader').css("visibility", "visible");
+    });
+
+    $(document).ajaxComplete(function() {
+        $('.loader').css("visibility", "hidden");
+    });
+
+    function setDocumentClass() {
+        // check if already in hist, else add.
+        document.getElementById("task-out").innerHTML = ""
+        var label = document.getElementById("class-text-input").value
+        if (label) {
+            var selector = document.getElementById("task-selector");
+            var options = $('#task-selector option');
+
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].text == label) {
+                    document.getElementById("task-out").innerHTML = "Already assigned..";
+                    return
+                }
+            }
+            var option = document.createElement("option");
+            option.text = label;
+            option.value = label;
+            selector.add(option);
+            selector.selectedIndex = (options.length);
+            document.getElementById("class-text-input").value = "";
+            addToTaskQueue(label);
+        } else {
+            return
+        }
+    }
+
+    function setProjOptions() {
+        // 1:PCA, 2:UMAP, 3:TSNE
+        value = document.getElementById("proj-selector").value;
+        console.log('setProjOptions:', value)
+        $.ajax({
+            url: "set_projection",
+            async: false,
+            data: {
+                "value": value
+            },
+            success: function(data) {
+                console.log(JSON.parse(data))
+            }
+        });
+        setWordVectors();
+    }
+
+    function setClustOptions() {
+        // 1:None, 2:DBSCAN, 3:OPTICS
+        value = document.getElementById("clust-selector").value;
+        console.log('setClustOptions:', value)
+        $.ajax({
+            url: "set_cluster",
+            async: false,
+            data: {
+                "value": value
+            },
+            success: function(data) {
+                console.log(JSON.parse(data));
+            }
+        });
+        setWordVectors();
+    }
+
+    function getScatterData(isUpdate) {
+        if (isUpdate) {
+            document.getElementById("entity-annotate-out").innerHTML = "Updating plot..";
+        }
+        console.log('getScatterData : Data requested')
+        $.ajax({
+            url: "get_scatter_data",
+            async: false,
+            data: {
+                "option": isUpdate
+            },
+            success: function(data) {
+                scatter_data = JSON.parse(data)['response'];
+                plotData(scatter_data, "#scatter-graph-view");
+            }
+        });
+    }
+
+    function setWordVectors() {
+        document.getElementById("search-out").innerHTML = "";
+        document.getElementById("entity-annotate-out").innerHTML = "";
+
+        word = document.getElementById("vector-text-input").value
+        sample_size = parseInt(document.getElementById("sample-size-input").value)
+        if (word == "") {
+            return
+        }
+        if (sample_size < 1 || isNaN(sample_size)) {
+            document.getElementById("sample-size-input").value = 1
+            sample_size = 1
+        }
+        $.ajax({
+            url: "set_vectors",
+            async: false,
+            data: {
+                "word": word,
+                "size": sample_size
+            },
+            success: function(data) {
+                var response = JSON.parse(data)
+                if (response == false) {
+                    document.getElementById("search-out").innerHTML = "Word not in vocabulary..";
+                } else {
+                    getScatterData(0);
+                }
+            }
+        });
+    }
+
+    function annotateWords() {
+        var shouldReturn = false
+        var selector = document.getElementById("task-selector");
+        var opt = selector.options[selector.selectedIndex].text;
+        // var canUpdate = true
+        // if (selector.options.selectedIndex) { //no doc-level classes
+        //     canUpdate = false
+        // }
+        // word annotation can only continue if it's contributing to a document class.
+        // Therefore needs to check or prompt for a task_monitor.
+        document.getElementById("entity-annotate-out").innerHTML = "";
+        var label = document.getElementById("entity-input").value;
+        if (label == "") {
+            return
+        }
+
+        $.ajax({
+            url: "get_selected",
+            async: false,
+            success: function(data) {
+                response = JSON.parse(data)['response']
+                if (response.length > 0) {
+                    setWordLabels(label);
+                    document.getElementById("entity-annotate-out").innerHTML = "annotateWords - Complete";
+                    updateHistory(opt);
+                } else {
+                    document.getElementById("entity-annotate-out").innerHTML = "No selection to annotate..";
+                    shouldReturn = true
+                }
+            }
+        });
+
+        if (shouldReturn) {
+            return
+        } else {
+            document.getElementById("entity-annotate-out").innerHTML = "Finding words in dataset.."
+            $.ajax({
+                url: "update_queue",
+                async: false,
+                data: {
+                    "label": opt
+                },
+                success: function(data) {
+                    response = JSON.parse(data)['response']
+                    console.log(response)
+                }
+            });
+        }
+        updateHistory(opt);
+    }
+
+    function setWordLabels(label) {
+        document.getElementById("entity-annotate-out").innerHTML = "Working.."
+        $.ajax({
+            url: "set_word_labels",
+            data: {
+                "label": label
+            },
+            success: function(data) {
+                response = JSON.parse(data)['response']
+                if (response) {
+                    document.getElementById("entity-annotate-out").innerHTML = "Label assigned..";
+                    var history = document.getElementById('entity-history-words');
+                    var entry = document.createElement('span');
+                    entry.innerHTML = label + " ";
+                    history.appendChild(entry);
+                } else {
+                    document.getElementById("entity-annotate-out").innerHTML = "Attempt failed";
+                }
+            }
+        });
+    }
+
+    function addToTaskQueue(label) {
+        $.ajax({
+            url: "update_queue",
+            async: false,
+            data: {
+                "label": label
+            },
+            success: function(data) {
+                response = JSON.parse(data)['response']
+                document.getElementById("entity-annotate-out").innerHTML = "Adding to queue...";
+                if (response) {
+                    var queue = document.getElementById("document-taskqueue");
+                    if (document.getElementById(label)) {
+                        document.getElementById("entity-annotate-out").innerHTML = "Adding examples to existing queue item.."
+                        return
+                    } else {
+                        var i = document.querySelectorAll("#document-taskqueue button").length
+                        var ref = (i + 1).toString() + " : " + label.toUpperCase(); + "<br>";
+                        var string = "<button id=" + label + " type='button' class='btn btn-primary btn-lg btn-block' onclick=showhide('document-taskview');annotateSentences(this.id);updateHistory(this.id)>" + ref + "</button><br>";
+                        var $input = $(string);
+                        $input.appendTo($(queue));
+                        document.getElementById("entity-annotate-out").innerHTML = "Complete"
+                    }
+                } else {
+                    document.getElementById("entity-annotate-out").innerHTML = "Attempt failed";
+                }
+            }
+        });
+        updateHistory(label);
+    }
+
+    function setHistory() {
+        var selector = document.getElementById("task-selector");
+        var label = selector.options[selector.selectedIndex].text;
+        showhide('document-taskqueue');
+        updateHistory(label);
+    }
+
+    function updateHistory(label) {
+        $.ajax({
+            url: "get_progress",
+            async: false,
+            data: {
+                "label": label
+            },
+            success: function(data) {
+                metrics = JSON.parse(data)['response']
+                if (metrics) {
+                    text = "<span>Word count: " + metrics[0].toString() + "</span><br>\
+                        <span>Queued: " + metrics[1].toString() + "</span><br>\
+                        <span>Accepted: " + metrics[2].toString() + " </span><br>\
+                        <span>Rejected: " + metrics[3].toString() + " </span><br>"
+                    document.getElementById("task-metrics").innerHTML = text
+                    var selector = document.getElementById("task-selector");
+                    var options = $('#task-selector option');
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].text == label) {
+                            selector.selectedIndex = i
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function showhide(id) {
+        if (document.getElementById) {
+            var div = document.getElementsByClassName("hideable");
+            for (var i = 0; i < div.length; i = i + 1) {
+                $(div[i]).fadeOut(1);
+            }
+            $(document.getElementById(id)).fadeIn(300);
+        }
+        return false;
+    }
+
+    function toggleLables(cb) {
+        setLabelVisibility(cb.checked)
+    }
+
+    function exportDataset() {
+        $.ajax({
+            url: "export_data",
+            async: false,
+            success: function(data) {
+                if (JSON.parse(data)) {
+                    console.log("success")
+                }
+            }
+        });
+    }
+</script>
+
+<body class="application">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand"> navbar-header</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- First column -->
+            <div class="col-sm-2">
+                <div class="box-wrapper">
+                    <div class="box-title">
+                        <b>control-view</b>
+                    </div>
+                    <div class="box-stage">
+                        <div id="control-view">
+                            <b>Document class:</b><br>
+                            <input id="class-text-input" type="text" placeholder="Label.." maxlength="20" size="12">
+                            <button id="class-submit-button" class="submit" style="width:40px" onclick="setDocumentClass()">&#x270E;</button><br>
+                            <div id="task-out" class="small_font" maxlength="0"></div><br>
+                            <b>Active: </b><br>
+                            <select id="task-selector" placeholder="..." onchange="setHistory()" style="height:20px; width:120px"></select>
+                            <br><br>
+                            <span style="font-size:90%;">Progress:</span>
+                            <div class="box-notes" style="width:95%">
+
+                                <div id='task-metrics'></div>
+                            </div>
+                            <br><b>Vector search:</b><br>
+                            <input id="vector-text-input" type="text" placeholder="Search.." maxlength="20" size="12">
+                            <input id="sample-size-input" type="number" placeholder="1" name="quantity" min="1" max="500">
+                            <button id="control-submit-button" class="submit" style="width:40px" onclick="setWordVectors()">&#x1F50D;</button><br>
+                            <div id="search-out" style="font-size:90%" maxlength="0"></div>
+                            <div id=proj-options>
+                                <br><b>Projection options:</b><br>
+                                <select id="proj-selector" placeholder="1" onchange="setProjOptions()">
+                                    <option value="1">PCA</option>
+                                    <option value="2">UMAP</option>
+                                    <option value="3">TSNE</option>
+                                </select>
+                                <input type="checkbox" id="toggle-labels" onclick="toggleLables(this)">
+                                <label style="font-size:12px;" for="toggle-labels">labels</label><br>
+                            </div>
+                            <div id=clust-options>
+                                <br><b>Cluster options:</b><br>
+                                <select id="clust-selector" placeholder="1" onchange="setClustOptions()">
+                                    <option value="1">Entity</option>
+                                    <option value="2">DBSCAN</option>
+                                    <option value="3">OPTICS</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-notes">
+                        <div id="control-notes">
+                            <b>model-view</b>
+                            <div id="session-metrics">
+                                <button id="export-dataset" class="submit" onclick="exportDataset()">Export to CSV</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end First column -->
+
+            <!-- Second column -->
+            <div class="col-sm-4">
+                <div class="box-wrapper">
+                    <div class="box-title">
+                        <b>scatter-graph-view</b>
+                    </div>
+                    <div class="box-stage">
+                        <div id="overlay" class="loader"></div>
+                        <div id="scatter-graph-view" class="wrapper hideable" style="height:500px; width:500px;"><b>scatter-graph-view</b></div>
+                        <div id="network-graph-view" class="wrapper hideable" style="height:470px; width:100%;"><b>network-graph-view</b><br>
+                    </div>
+                    <div class="box-notes">
+                        <div id="scatter-notes" style="height:80%">
+                            <b>Entity:</b>
+                            <input id="entity-input" type="text" placeholder="Label.." maxlength="20" size="12">
+                            <button id="entity-submit-button" class="submit" style="width:40px" onclick="annotateWords()">&#x270E;</button>
+                            <button id="entity-disown-button" class="submit" style="width:40px" onclick="">&#x1F5D1;</button>
+                            <button id="lasso-button" class="submit" style="width:40px" onclick="toggleLasso()">&#x23E7;</button><br>
+
+                            <div id="entity-annotate-out" style="font-size:90%" maxlength="0"></div>
+                            <br>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        <b>Words selected:</b>
+                                        <div class="wrapper" style="max-width: 100%; max-height:80%;">
+                                            <div id="entity-selected-words" class="medium_font" maxlength="0"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <b>History:</b>
+                                        <div class="wrapper" style="max-width: 100%; max-height:80%;">
+                                            <div id="entity-history-words" class="medium_font" maxlength="0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end second column -->
+
+            <!-- Third column -->
+            <div class="col-sm-3">
+                <div class="box-wrapper">
+                    <div class="box-title">
+                        <b>document-view</b>
+                    </div>
+                    <div id="document-buttons">
+                        <button type="button" onclick="showhide('document-taskqueue')" style="float:left">«</button>
+                        <button type="button" onclick="showhide('document-taskview')">»</button>
+                    </div>
+                    <div class="box-stage">
+                        <div id='task-wrapper-options' class="btn-group options" role="group">
+                            <button type="button" class="btn btn-secondary" onclick="processAnnotation(this)" value=0>✔</button>
+                            <button type="button" class="btn btn-secondary" onclick="processAnnotation(this)" value=1>🗙</button>
+                            <button type="button" class="btn btn-secondary" onclick="processAnnotation(this)" value=2>➤</button>
+                            <br><br>
+                        </div>
+                        <div id="document-taskqueue" class="wrapper hideable" style="height:470px; width:100%;"><b>document-taskqueue</b><br></div>
+                        <div id="document-taskview" class="wrapper hideable" style="height:470px; width:100%;"><b>document-taskview</b><br>
+                            <div id="task-stage"></div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end third column -->
+        </div> <!-- row -->
+    </div>
+    <!--container-fluid"-->
+
+</body>
+
+<script>
+    showhide('document-taskqueue')
+    setProjOptions()
+    setClustOptions()
+    createScatterGraph('#scatter-graph-view');
+</script>
+
+</html>
