@@ -3,6 +3,8 @@
 
 CL-ASP is web-based annotation system which facilitates annotation tasks at a variety of levels. The system takes a novel approach to text representation, allowing users to quickly project and cluster sections of the vector space. As a result, words and their latent interactions can be rapidly investigated, and entity tags quickly assigned. Once given, tags aid toward the retrieval of text, where words previously discovered can be examined further in context. From here, a simple binary interface allows users to quickly curate a dataset of examples, by either agreeing or disagreeing with exemplar pieces of text presented to them. Once complete, the dataset can be easily exported and used to train machine learning models for classification or NER applications.
 
+As many of the heavyweight files (such as the raw data, models, etc) required to run this application have been removed from this repo, please see [here](https://youtu.be/AW2y5zi9E2A) for a demonstration - please forgive the watermark! :man_facepalming:
+
 The Word2Vec model that enables the projections has been pre-trained with the Enron dataset, as it appears in [./data/enron/emails.csv]().
 
 All pre-processing and modelling techniques implemented can be modified and rerun from [./notebooks/ppam_script.ipynb]() if desired; HTML version also available to view for those without Jupyter.
